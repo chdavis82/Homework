@@ -1,0 +1,116 @@
+Sub StockTicker()
+
+On Error Resume Next
+
+Dim ws As Worksheet
+
+For Each ws In Worksheets
+
+
+        Dim ticker As String
+        Dim counter As Integer
+        Dim year_open As Double
+        Dim year_close As Double
+        Dim year_percentage As Double
+        Dim vol As Double
+
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly change"
+        ws.Cells(1, 11).Value = "Yearly Percentage"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+
+        counter = 2
+        lastRowCount = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+        For i = 2 To lastRowCount
+
+          If year_open = 0 Then
+
+              year_open = ws.Cells(i, 3).Value
+
+           End If
+            
+                If year_change = 0 Then
+                    
+                    year_change = ws.Cells(i, 10).Value
+                    
+                End If
+                
+                    If year_close = 0 Then
+                    
+                        year_percent = 0
+                        
+                    End If
+            
+                        If ws.Cells(i - 1, 1) = ws.Cells(i, 1) And ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+        
+                            ticker = ws.Cells(i, 1).Value
+            
+                            year_close = ws.Cells(i, 6).Value
+            
+                            year_change = year_close - year_open
+            
+                            year_percent = year_change / year_close
+            
+                            vol = vol + ws.Cells(i, 7).Value
+            
+            
+                            ws.Range("i" & counter).Value = ticker
+            
+                            ws.Range("j" & counter).Value = year_change
+            
+                            ws.Range("k" & counter).Value = year_percent * 100 & " %"
+            
+                            ws.Range("L" & counter).Value = vol
+            
+                            counter = counter + 1
+            
+                            vol = 0
+                           
+                        Else
+        
+                            vol = vol + ws.Cells(i, 7).Value
+                  
+            End If
+                
+    Next i
+    
+'     'Conditional Formating for Range"K" values that are less than 0
+
+'        Range("K2:K3169").Select
+'        Selection.FormatConditions.Add Type:=xlCellValue, Operator:=xlLess, _
+'            Formula1:="=0"
+'        Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+'        With Selection.FormatConditions(1).Font
+'            .Color = -16383844
+'            .TintAndShade = 0
+'        End With
+'        With Selection.FormatConditions(1).Interior
+'            .PatternColorIndex = xlAutomatic
+'            .Color = 13551615
+'            .TintAndShade = 0
+'        End With
+'        Selection.FormatConditions(1).StopIfTrue = False
+'
+'    'Conditional Formating for Range"K" values that are > than 0
+
+'        Range("K2:K3169").Select
+'        Selection.FormatConditions.Add Type:=xlCellValue, Operator:=xlGreater, _
+'            Formula1:="=0"
+'        Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+'        With Selection.FormatConditions(1).Font
+'            .Color = -16752384
+'            .TintAndShade = 0
+'        End With
+'        With Selection.FormatConditions(1).Interior
+'            .PatternColorIndex = xlAutomatic
+'            .Color = 13561798
+'            .TintAndShade = 0
+'        End With
+'        Selection.FormatConditions(1).StopIfTrue = False
+       
+ws.Activate
+       
+Next
+
+End Sub
